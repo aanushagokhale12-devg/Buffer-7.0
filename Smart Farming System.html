@@ -1,0 +1,1471 @@
+<!DOCTYPE html>
+<!-- saved from url=(0059)file:///C:/Users/DELL/Downloads/smart_farming_frontend.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Farming System</title>
+<link href="./Smart Farming System_files/css2" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d1a0f;
+    --bg2: #111f13;
+    --bg3: #162119;
+    --card: #1a2b1c;
+    --card2: #1f3321;
+    --green: #4caf50;
+    --green2: #81c784;
+    --green3: #2e7d32;
+    --amber: #ffb74d;
+    --red: #ef5350;
+    --teal: #4db6ac;
+    --text: #e8f5e9;
+    --text2: #a5d6a7;
+    --text3: #6a9970;
+    --border: #2a4a2d;
+    --border2: #3a6b3e;
+    --font-head: 'Playfair Display', Georgia, serif;
+    --font-body: 'DM Sans', sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── GRAIN OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+    opacity: 0.5;
+  }
+
+  /* ── HERO HEADER ── */
+  .hero {
+    position: relative;
+    padding: 56px 40px 40px;
+    overflow: hidden;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 360px; height: 360px;
+    background: radial-gradient(circle, rgba(76,175,80,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -40px; left: 20%;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(255,183,77,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .hero-eyebrow::before {
+    content: '';
+    display: inline-block;
+    width: 24px; height: 1px;
+    background: var(--green);
+  }
+  .hero h1 {
+    font-family: var(--font-head);
+    font-size: clamp(32px, 6vw, 58px);
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--text);
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .hero h1 span { color: var(--green2); }
+  .hero-sub {
+    color: var(--text3);
+    font-size: 14px;
+    font-weight: 300;
+    max-width: 480px;
+    line-height: 1.7;
+  }
+  .hero-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+  }
+  .badge {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text2);
+    letter-spacing: 0.5px;
+  }
+  .badge.green { border-color: var(--green3); color: var(--green2); background: rgba(46,125,50,0.15); }
+  .badge.amber { border-color: #8d5000; color: var(--amber); background: rgba(255,183,77,0.08); }
+
+  /* ── STAT BAR ── */
+  .stat-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 1px solid var(--border);
+  }
+  .stat-item {
+    padding: 20px 28px;
+    border-right: 1px solid var(--border);
+    animation: fadeUp 0.5s ease both;
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--green2);
+    display: block;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    margin-top: 2px;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .main-layout {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: calc(100vh - 240px);
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .sidebar {
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    padding: 28px 0;
+    position: sticky;
+    top: 0;
+    height: fit-content;
+  }
+  .sidebar-label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    padding: 0 20px;
+    margin-bottom: 10px;
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 11px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    border-left: 3px solid transparent;
+    font-size: 13px;
+    font-weight: 400;
+    color: var(--text3);
+    position: relative;
+  }
+  .nav-item:hover {
+    background: var(--card);
+    color: var(--text);
+    border-left-color: var(--border2);
+  }
+  .nav-item.active {
+    background: rgba(76,175,80,0.12);
+    color: var(--green2);
+    border-left-color: var(--green);
+    font-weight: 500;
+  }
+  .nav-icon {
+    font-size: 16px;
+    width: 20px;
+    text-align: center;
+  }
+  .nav-item .nav-tag {
+    margin-left: auto;
+    background: var(--green3);
+    color: #c8e6c9;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+
+  /* ── CONTENT AREA ── */
+  .content { padding: 32px 36px; }
+
+  /* ── SECTION ── */
+  .section { display: none; }
+  .section.active { display: block; animation: fadeUp 0.35s ease both; }
+
+  .section-title {
+    font-family: var(--font-head);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.5px;
+  }
+  .section-desc {
+    font-size: 13px;
+    color: var(--text3);
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+
+  /* ── FORM GRID ── */
+  .form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .form-group { display: flex; flex-direction: column; gap: 7px; }
+  .form-group.full { grid-column: 1 / -1; }
+  .form-group label {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text3);
+  }
+  .form-group input,
+  .form-group select {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .form-group select { cursor: pointer; }
+  .form-group select option { background: var(--bg2); }
+  .form-group input::placeholder { color: var(--text3); opacity: 0.6; }
+  .form-group input:focus,
+  .form-group select:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px rgba(76,175,80,0.12);
+  }
+
+  /* ── RANGE SLIDER ── */
+  .range-wrap { display: flex; align-items: center; gap: 12px; }
+  .range-wrap input[type=range] {
+    flex: 1; padding: 0; background: none; border: none;
+    accent-color: var(--green);
+    box-shadow: none;
+  }
+  .range-val {
+    min-width: 36px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--green2);
+  }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 11px 24px;
+    border-radius: 8px;
+    font-family: var(--font-body);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .btn-primary {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--green2); color: #0d1a0f; }
+  .btn-secondary {
+    background: var(--card);
+    border: 1px solid var(--border2);
+    color: var(--text2);
+  }
+  .btn-secondary:hover { background: var(--card2); border-color: var(--green); color: var(--green2); }
+  .btn-danger { background: rgba(239,83,80,0.15); border: 1px solid rgba(239,83,80,0.3); color: var(--red); }
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  /* ── RESULT CARDS ── */
+  .result-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-top: 24px;
+  }
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .result-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--green3);
+    border-radius: 12px 12px 0 0;
+  }
+  .result-card.rank-1::before { background: var(--green); }
+  .result-card.rank-2::before { background: var(--teal); }
+  .result-card.rank-3::before { background: var(--text3); }
+  .result-card:hover { transform: translateY(-3px); border-color: var(--border2); }
+  .result-rank {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .result-name {
+    font-family: var(--font-head);
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 12px;
+  }
+  .score-bar-wrap { margin-bottom: 10px; }
+  .score-label { display: flex; justify-content: space-between; font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .score-bar-bg { background: var(--bg3); border-radius: 4px; height: 6px; overflow: hidden; }
+  .score-bar { height: 6px; border-radius: 4px; background: var(--green); transition: width 0.8s ease; }
+  .result-meta { font-size: 12px; color: var(--text3); margin-top: 8px; }
+  .result-meta span { color: var(--text2); }
+  .confidence-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 10px;
+    margin-top: 8px;
+  }
+  .conf-high { background: rgba(76,175,80,0.2); color: var(--green2); border: 1px solid rgba(76,175,80,0.3); }
+  .conf-med  { background: rgba(255,183,77,0.15); color: var(--amber); border: 1px solid rgba(255,183,77,0.25); }
+  .conf-low  { background: rgba(239,83,80,0.1); color: var(--red); border: 1px solid rgba(239,83,80,0.2); }
+
+  /* ── INFO TABLE ── */
+  .info-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .info-table th {
+    text-align: left;
+    font-size: 10px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text3);
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text2);
+    vertical-align: top;
+  }
+  .info-table tr:hover td { background: rgba(76,175,80,0.04); }
+  .info-table td:first-child { color: var(--text3); font-size: 12px; }
+  .info-table .highlight { color: var(--green2); font-weight: 500; }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .tag-high   { background: rgba(76,175,80,0.2);  color: #a5d6a7; }
+  .tag-med    { background: rgba(255,183,77,0.15); color: #ffe082; }
+  .tag-low    { background: rgba(239,83,80,0.1);   color: #ef9a9a; }
+  .tag-rising { background: rgba(77,182,172,0.15); color: var(--teal); }
+  .tag-fall   { background: rgba(239,83,80,0.1);   color: var(--red); }
+  .tag-stable { background: rgba(100,100,100,0.15); color: #aaa; }
+
+  /* ── ALERT BOX ── */
+  .alert {
+    border-radius: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    margin: 16px 0;
+    border-left: 3px solid;
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+  }
+  .alert-icon { font-size: 16px; margin-top: 1px; flex-shrink: 0; }
+  .alert-text { line-height: 1.6; }
+  .alert-green { background: rgba(76,175,80,0.08); border-color: var(--green); color: var(--green2); }
+  .alert-amber { background: rgba(255,183,77,0.08); border-color: var(--amber); color: #ffe082; }
+  .alert-red   { background: rgba(239,83,80,0.08);  border-color: var(--red);   color: #ef9a9a; }
+  .alert-teal  { background: rgba(77,182,172,0.08); border-color: var(--teal);  color: #80cbc4; }
+
+  /* ── PEST CARD ── */
+  .pest-hero {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px 28px;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+  }
+  .risk-pill {
+    font-family: var(--font-head);
+    font-size: 32px;
+    font-weight: 700;
+    padding: 12px 24px;
+    border-radius: 12px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .risk-HIGH   { background: rgba(239,83,80,0.15); color: var(--red); border: 2px solid rgba(239,83,80,0.3); }
+  .risk-MEDIUM { background: rgba(255,183,77,0.12); color: var(--amber); border: 2px solid rgba(255,183,77,0.25); }
+  .risk-Low    { background: rgba(76,175,80,0.12); color: var(--green2); border: 2px solid rgba(76,175,80,0.25); }
+
+  /* ── MARKET BAR CHART ── */
+  .bar-chart { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { font-size: 12px; color: var(--text2); min-width: 80px; text-align: right; }
+  .bar-track { flex: 1; background: var(--bg3); border-radius: 4px; height: 22px; overflow: hidden; position: relative; }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    color: #fff;
+    transition: width 1s ease;
+    min-width: 40px;
+  }
+  .bar-price { font-size: 11px; color: var(--text3); min-width: 80px; }
+
+  /* ── FERTILITY METER ── */
+  .fertility-meter {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .meter-ring {
+    width: 140px; height: 140px;
+    margin: 0 auto 20px;
+    position: relative;
+  }
+  .meter-ring svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .meter-ring-val {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-head);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    transform: none;
+  }
+
+  /* ── SCORE BREAKDOWN BARS ── */
+  .breakdown-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .breakdown-label { font-size: 12px; color: var(--text3); min-width: 120px; }
+  .breakdown-track { flex: 1; background: var(--bg3); border-radius: 4px; height: 8px; overflow: hidden; }
+  .breakdown-fill { height: 8px; border-radius: 4px; background: var(--green); transition: width 0.9s ease; }
+  .breakdown-pct { font-size: 11px; color: var(--text2); min-width: 36px; text-align: right; }
+
+  /* ── COMPARE TABLE ── */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .compare-table th {
+    padding: 10px 14px;
+    background: var(--card2);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text3);
+    border: 1px solid var(--border);
+  }
+  .compare-table th.winner { color: var(--green2); background: rgba(46,125,50,0.2); }
+  .compare-table td {
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    color: var(--text2);
+    font-size: 13px;
+  }
+  .compare-table td:first-child { color: var(--text3); font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 500; }
+  .compare-table tr:hover td { background: rgba(76,175,80,0.03); }
+  .compare-table .win-cell { color: var(--green2); font-weight: 500; }
+
+  /* ── DIVIDER ── */
+  .divider { border: none; border-top: 1px solid var(--border); margin: 28px 0; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── FOOTER ── */
+  .footer {
+    border-top: 1px solid var(--border);
+    padding: 16px 36px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text3);
+  }
+  .footer span { color: var(--green); font-weight: 500; }
+
+  @media (max-width: 700px) {
+    .main-layout { grid-template-columns: 1fr; }
+    .sidebar { position: static; }
+    .stat-bar { grid-template-columns: 1fr 1fr; }
+    .form-grid { grid-template-columns: 1fr; }
+    .hero { padding: 32px 20px 28px; }
+    .content { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-eyebrow">Smart Farming System v3.0</div>
+  <h1>Crop Intelligence<br><span>Dashboard</span></h1>
+  <p class="hero-sub">AI-powered agriculture recommendation engine — soil analysis, market insights, pest detection &amp; fertility management in one place.</p>
+  <div class="hero-badges">
+    <span class="badge green">DSA: HashMap + Bubble Sort</span>
+    <span class="badge green">Linear Search</span>
+    <span class="badge amber">10 Crops Database</span>
+    <span class="badge">7 Modules</span>
+    <span class="badge">OOP Design</span>
+  </div>
+</header>
+
+<!-- STAT BAR -->
+<div class="stat-bar">
+  <div class="stat-item" style="animation-delay:0.05s">
+    <span class="stat-num">10</span>
+    <span class="stat-label">Crops in DB</span>
+  </div>
+  <div class="stat-item" style="animation-delay:0.1s">
+    <span class="stat-num">7</span>
+    <span class="stat-label">Modules</span>
+  </div>
+  <div class="stat-item" style="animation-delay:0.15s">
+    <span class="stat-num">6</span>
+    <span class="stat-label">Soil Types</span>
+  </div>
+  <div class="stat-item" style="animation-delay:0.2s">
+    <span class="stat-num">5</span>
+    <span class="stat-label">DSA Concepts</span>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-label">Navigation</div>
+    <div class="nav-item active" onclick="showSection(&#39;recommend&#39;, this)">
+      <span class="nav-icon">🌾</span> Crop Recommendation
+      <span class="nav-tag">NEW</span>
+    </div>
+    <div class="nav-item" onclick="showSection(&#39;info&#39;, this)">
+      <span class="nav-icon">📋</span> Crop Information
+    </div>
+    <div class="nav-item" onclick="showSection(&#39;market&#39;, this)">
+      <span class="nav-icon">📈</span> Market Demand
+    </div>
+    <div class="nav-item" onclick="showSection(&#39;pest&#39;, this)">
+      <span class="nav-icon">⚠️</span> Pest Risk Alert
+    </div>
+    <div class="nav-item" onclick="showSection(&#39;fertility&#39;, this)">
+      <span class="nav-icon">🌿</span> Fertility Advice
+    </div>
+    <div class="nav-item" onclick="showSection(&#39;compare&#39;, this)">
+      <span class="nav-icon">⚖️</span> Compare Crops
+    </div>
+  </nav>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <!-- ── SECTION 1: RECOMMEND ── -->
+    <section class="section active" id="sec-recommend">
+      <div class="section-title">Crop Recommendation</div>
+      <div class="section-desc">Enter your farm conditions below. The scoring engine weighs soil (30%), temperature (20%), water (20%), market demand (15%) and fertility (15%).</div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label>Soil Type</label>
+          <select id="r-soil">
+            <option value="Loamy">Loamy</option>
+            <option value="Clay">Clay</option>
+            <option value="Sandy">Sandy</option>
+            <option value="Black">Black</option>
+            <option value="Red">Red</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Season</label>
+          <select id="r-season">
+            <option value="Kharif">Kharif (Jun–Oct)</option>
+            <option value="Rabi">Rabi (Nov–Apr)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Temperature (°C)</label>
+          <div class="range-wrap">
+            <input type="range" id="r-temp" min="5" max="45" value="26" oninput="document.getElementById(&#39;r-temp-val&#39;).textContent=this.value+&#39;°C&#39;">
+            <span class="range-val" id="r-temp-val">26°C</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Humidity (%)</label>
+          <div class="range-wrap">
+            <input type="range" id="r-hum" min="10" max="100" value="65" oninput="document.getElementById(&#39;r-hum-val&#39;).textContent=this.value+&#39;%&#39;">
+            <span class="range-val" id="r-hum-val">65%</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Water Availability (0–100)</label>
+          <div class="range-wrap">
+            <input type="range" id="r-water" min="0" max="100" value="60" oninput="document.getElementById(&#39;r-water-val&#39;).textContent=this.value">
+            <span class="range-val" id="r-water-val">60</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Fertility Level (0.0–1.0)</label>
+          <div class="range-wrap">
+            <input type="range" id="r-fert" min="0" max="10" value="6" oninput="document.getElementById(&#39;r-fert-val&#39;).textContent=(this.value/10).toFixed(1)">
+            <span class="range-val" id="r-fert-val">0.6</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Rainfall (mm)</label>
+          <input type="number" id="r-rain" placeholder="e.g. 600" value="600">
+        </div>
+        <div class="form-group">
+          <label>Available Water for Irrigation (mm)</label>
+          <input type="number" id="r-irrigation" placeholder="e.g. 80" value="80">
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="runRecommendation()">⚡ Get Recommendations</button>
+        <button class="btn btn-secondary" onclick="resetRecommend()">↺ Reset</button>
+      </div>
+
+      <div id="rec-results" style="display:none">
+        <hr class="divider">
+        <div class="section-title" style="font-size:18px;">Top Crop Matches</div>
+        <div class="result-grid" id="rec-cards"></div>
+
+        <hr class="divider">
+        <div class="section-title" style="font-size:16px; margin-bottom:12px;">💧 Irrigation Advice</div>
+        <div id="irrigation-alert"></div>
+
+        <div id="score-breakdown-box" style="margin-top:20px;">
+          <div class="section-title" style="font-size:16px; margin-bottom:14px;">🔍 Score Breakdown — Top Crop</div>
+          <div id="breakdown-bars"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 2: CROP INFO ── -->
+    <section class="section" id="sec-info">
+      <div class="section-title">Crop Information</div>
+      <div class="section-desc">Search, filter, and explore the full crop database using Linear Search (O(n)).</div>
+
+      <div class="form-grid" style="max-width:560px;">
+        <div class="form-group">
+          <label>Search by Name</label>
+          <input type="text" id="info-name" placeholder="e.g. Rice, Wheat, Onion">
+        </div>
+        <div class="form-group">
+          <label>Filter by Season</label>
+          <select id="info-season">
+            <option value="">-- All Seasons --</option>
+            <option value="Kharif">Kharif</option>
+            <option value="Rabi">Rabi</option>
+            <option value="All Season">All Season</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Filter by Soil</label>
+          <select id="info-soil">
+            <option value="">-- All Soils --</option>
+            <option value="Loamy">Loamy</option>
+            <option value="Clay">Clay</option>
+            <option value="Sandy">Sandy</option>
+            <option value="Black">Black</option>
+            <option value="Red">Red</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-primary" onclick="runSearch()">🔍 Search / Filter</button>
+        <button class="btn btn-secondary" onclick="showAllCrops()">📋 View All</button>
+      </div>
+
+      <hr class="divider">
+      <div id="info-results">
+        <table class="info-table" id="info-table">
+          <thead><tr>
+            <th>Crop</th><th>Season</th><th>Soil</th><th>Temp Range</th>
+            <th>Min Rain</th><th>Growth Days</th><th>Avg Yield</th><th>NPK (kg/ha)</th>
+          </tr></thead>
+          <tbody id="info-tbody">
+    <tr>
+      <td class="highlight">Rice</td>
+      <td>Kharif</td>
+      <td>Clay</td>
+      <td>20–35°C</td>
+      <td>1200 mm</td>
+      <td>150 days</td>
+      <td>4 t/ha</td>
+      <td style="font-size:11px">N:100 P:50 K:50</td>
+    </tr>
+    <tr>
+      <td class="highlight">Wheat</td>
+      <td>Rabi</td>
+      <td>Loamy</td>
+      <td>10–25°C</td>
+      <td>450 mm</td>
+      <td>120 days</td>
+      <td>3.5 t/ha</td>
+      <td style="font-size:11px">N:120 P:60 K:40</td>
+    </tr>
+    <tr>
+      <td class="highlight">Maize</td>
+      <td>Kharif</td>
+      <td>Sandy</td>
+      <td>18–32°C</td>
+      <td>600 mm</td>
+      <td>90 days</td>
+      <td>5 t/ha</td>
+      <td style="font-size:11px">N:150 P:60 K:40</td>
+    </tr>
+    <tr>
+      <td class="highlight">Sugarcane</td>
+      <td>Kharif</td>
+      <td>Loamy</td>
+      <td>20–35°C</td>
+      <td>2000 mm</td>
+      <td>365 days</td>
+      <td>70 t/ha</td>
+      <td style="font-size:11px">N:250 P:80 K:150</td>
+    </tr>
+    <tr>
+      <td class="highlight">Millet</td>
+      <td>Kharif</td>
+      <td>Sandy</td>
+      <td>25–40°C</td>
+      <td>30 mm</td>
+      <td>100 days</td>
+      <td>2 t/ha</td>
+      <td style="font-size:11px">N:60 P:30 K:20</td>
+    </tr>
+    <tr>
+      <td class="highlight">Barley</td>
+      <td>Rabi</td>
+      <td>Sandy</td>
+      <td>10–25°C</td>
+      <td>40 mm</td>
+      <td>110 days</td>
+      <td>2.5 t/ha</td>
+      <td style="font-size:11px">N:80 P:40 K:30</td>
+    </tr>
+    <tr>
+      <td class="highlight">Soybean</td>
+      <td>Kharif</td>
+      <td>Loamy</td>
+      <td>20–30°C</td>
+      <td>500 mm</td>
+      <td>100 days</td>
+      <td>1.5 t/ha</td>
+      <td style="font-size:11px">N:30 P:60 K:40</td>
+    </tr>
+    <tr>
+      <td class="highlight">Cotton</td>
+      <td>Kharif</td>
+      <td>Black</td>
+      <td>20–35°C</td>
+      <td>700 mm</td>
+      <td>180 days</td>
+      <td>1.8 t/ha</td>
+      <td style="font-size:11px">N:100 P:50 K:50</td>
+    </tr>
+    <tr>
+      <td class="highlight">Tomato</td>
+      <td>All Season</td>
+      <td>Red</td>
+      <td>18–30°C</td>
+      <td>600 mm</td>
+      <td>75 days</td>
+      <td>25 t/ha</td>
+      <td style="font-size:11px">N:120 P:60 K:60</td>
+    </tr>
+    <tr>
+      <td class="highlight">Onion</td>
+      <td>Rabi</td>
+      <td>Sandy</td>
+      <td>13–28°C</td>
+      <td>350 mm</td>
+      <td>120 days</td>
+      <td>15 t/ha</td>
+      <td style="font-size:11px">N:100 P:50 K:100</td>
+    </tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── SECTION 3: MARKET ── -->
+    <section class="section" id="sec-market">
+      <div class="section-title">Market Demand</div>
+      <div class="section-desc">Crops ranked by demand score using Bubble Sort (O(n²)). Includes price trend and export potential.</div>
+
+      <div class="btn-row" style="margin-bottom:24px;">
+        <button class="btn btn-primary" onclick="showMarket(&#39;all&#39;)">📊 Ranked Demand</button>
+        <button class="btn btn-secondary" onclick="showMarket(&#39;summary&#39;)">📈 Summary</button>
+        <button class="btn btn-secondary" onclick="showMarket(&#39;export&#39;)">✈️ Export Crops</button>
+      </div>
+
+      <div id="market-results">
+      <div class="section-title" style="font-size:16px;margin-bottom:16px">All Crops — Ranked by Demand (Bubble Sort)</div>
+      <div class="bar-chart">
+        
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0s both">
+            <div class="bar-label">Onion</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:100%; background:#2e7d32">
+                95/100
+              </div>
+            </div>
+            <div class="bar-price">₹2800</div>
+            <span class="tag tag-rising">▲ Rising</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.05s both">
+            <div class="bar-label">Rice</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:97%; background:#2e7d32">
+                92/100
+              </div>
+            </div>
+            <div class="bar-price">₹2100</div>
+            <span class="tag tag-rising">▲ Rising</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.1s both">
+            <div class="bar-label">Tomato</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:93%; background:#2e7d32">
+                88/100
+              </div>
+            </div>
+            <div class="bar-price">₹2000</div>
+            <span class="tag tag-fall">▼ Falling</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.15000000000000002s both">
+            <div class="bar-label">Wheat</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:82%; background:#e65100">
+                78/100
+              </div>
+            </div>
+            <div class="bar-price">₹2200</div>
+            <span class="tag tag-rising">▲ Rising</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.2s both">
+            <div class="bar-label">Cotton</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:74%; background:#e65100">
+                70/100
+              </div>
+            </div>
+            <div class="bar-price">₹6200</div>
+            <span class="tag tag-rising">▲ Rising</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.25s both">
+            <div class="bar-label">Maize</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:68%; background:#e65100">
+                65/100
+              </div>
+            </div>
+            <div class="bar-price">₹1900</div>
+            <span class="tag tag-fall">▼ Falling</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.30000000000000004s both">
+            <div class="bar-label">Soybean</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:63%; background:#e65100">
+                60/100
+              </div>
+            </div>
+            <div class="bar-price">₹4100</div>
+            <span class="tag tag-stable">── Stable</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.35000000000000003s both">
+            <div class="bar-label">Sugarcane</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:58%; background:#37474f">
+                55/100
+              </div>
+            </div>
+            <div class="bar-price">₹3500</div>
+            <span class="tag tag-stable">── Stable</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.4s both">
+            <div class="bar-label">Millet</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:53%; background:#37474f">
+                50/100
+              </div>
+            </div>
+            <div class="bar-price">₹1800</div>
+            <span class="tag tag-rising">▲ Rising</span>
+          </div>
+          <div class="bar-row" style="animation:fadeUp 0.3s ease 0.45s both">
+            <div class="bar-label">Barley</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:51%; background:#37474f">
+                48/100
+              </div>
+            </div>
+            <div class="bar-price">₹1600</div>
+            <span class="tag tag-stable">── Stable</span>
+          </div>
+      </div></div>
+    </section>
+
+    <!-- ── SECTION 4: PEST ── -->
+    <section class="section" id="sec-pest">
+      <div class="section-title">Pest Risk Alert</div>
+      <div class="section-desc">Enter crop name and current conditions. The system flags disease risk based on known disease thresholds.</div>
+
+      <div class="form-grid" style="max-width:480px;">
+        <div class="form-group">
+          <label>Crop Name</label>
+          <select id="pest-crop">
+            <option>Rice</option><option>Wheat</option><option>Maize</option>
+            <option>Sugarcane</option><option>Millet</option><option>Barley</option>
+            <option>Soybean</option><option>Cotton</option><option>Tomato</option><option>Onion</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Temperature (°C)</label>
+          <div class="range-wrap">
+            <input type="range" id="pest-temp" min="5" max="45" value="26" oninput="document.getElementById(&#39;pest-temp-v&#39;).textContent=this.value+&#39;°C&#39;">
+            <span class="range-val" id="pest-temp-v">26°C</span>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Humidity (%)</label>
+          <div class="range-wrap">
+            <input type="range" id="pest-hum" min="10" max="100" value="65" oninput="document.getElementById(&#39;pest-hum-v&#39;).textContent=this.value+&#39;%&#39;">
+            <span class="range-val" id="pest-hum-v">65%</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="runPest()">⚠️ Check Pest Risk</button>
+      <hr class="divider">
+      <div id="pest-results"></div>
+    </section>
+
+    <!-- ── SECTION 5: FERTILITY ── -->
+    <section class="section" id="sec-fertility">
+      <div class="section-title">Fertility Advice</div>
+      <div class="section-desc">Enter your soil fertility level (0.0 = very poor, 1.0 = excellent) to get precise fertilizer recommendations.</div>
+
+      <div class="form-group" style="max-width:360px; margin-bottom:24px;">
+        <label>Fertility Level (0.0 – 1.0)</label>
+        <div class="range-wrap">
+          <input type="range" id="fert-val" min="0" max="10" value="5" oninput="document.getElementById(&#39;fert-display&#39;).textContent=(this.value/10).toFixed(1); updateMeter(this.value/10)">
+          <span class="range-val" id="fert-display">0.5</span>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="runFertility()">🌿 Get Advice</button>
+      <hr class="divider">
+      <div id="fertility-results" style="display:none">
+        <div class="fertility-meter">
+          <div class="meter-ring" id="meter-ring">
+            <svg viewBox="0 0 140 140">
+              <circle cx="70" cy="70" r="56" fill="none" stroke="#1a2b1c" stroke-width="12"></circle>
+              <circle id="meter-circle" cx="70" cy="70" r="56" fill="none" stroke="#4caf50" stroke-width="12" stroke-dasharray="351.86" stroke-dashoffset="175.93" stroke-linecap="round"></circle>
+            </svg>
+            <div class="meter-ring-val" id="meter-label">0.5</div>
+          </div>
+          <div id="fert-level-text" style="font-size:18px; font-weight:500; color:var(--amber);">MEDIUM</div>
+          <div style="font-size:12px; color:var(--text3); margin-top:4px;">Soil Fertility Level</div>
+        </div>
+        <div id="fert-advice-box"></div>
+      </div>
+    </section>
+
+    <!-- ── SECTION 6: COMPARE ── -->
+    <section class="section" id="sec-compare">
+      <div class="section-title">Compare Two Crops</div>
+      <div class="section-desc">Side-by-side comparison of any two crops from the database. Winners are highlighted in each category.</div>
+
+      <div class="form-grid" style="max-width:480px;">
+        <div class="form-group">
+          <label>Crop A</label>
+          <select id="cmp-a">
+            <option>Rice</option><option>Wheat</option><option>Maize</option>
+            <option>Sugarcane</option><option>Millet</option><option>Barley</option>
+            <option>Soybean</option><option>Cotton</option><option>Tomato</option><option>Onion</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Crop B</label>
+          <select id="cmp-b">
+            <option>Wheat</option><option>Rice</option><option>Maize</option>
+            <option>Sugarcane</option><option>Millet</option><option>Barley</option>
+            <option>Soybean</option><option>Cotton</option><option>Tomato</option><option>Onion</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="runCompare()">⚖️ Compare Now</button>
+      <hr class="divider">
+      <div id="compare-results"></div>
+    </section>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div>Smart Farming System — <span>v3.0</span> &nbsp;|&nbsp; DSA Lab Project &nbsp;|&nbsp; Java Backend</div>
+  <div>Built with: HashMap • ArrayList • Bubble Sort • Linear Search • OOP</div>
+</footer>
+
+<script>
+// ════════ CROP DATABASE (mirrors Java backend) ════════
+const crops = {
+  Rice:      { soil:"Clay",   season:"Kharif",     climate:"Hot & Humid",  minT:20, maxT:35, idealT:28, waterNeed:80, rain:1200, yield:4.0,  days:150, npk:"N:100 P:50 K:50",  demand:0.9, dScore:92, price:2100,  trend:1,  export:true },
+  Wheat:     { soil:"Loamy",  season:"Rabi",        climate:"Cool & Dry",   minT:10, maxT:25, idealT:20, waterNeed:50, rain:450,  yield:3.5,  days:120, npk:"N:120 P:60 K:40",  demand:0.8, dScore:78, price:2200,  trend:1,  export:true },
+  Maize:     { soil:"Sandy",  season:"Kharif",     climate:"Warm",          minT:18, maxT:32, idealT:25, waterNeed:60, rain:600,  yield:5.0,  days:90,  npk:"N:150 P:60 K:40",  demand:0.7, dScore:65, price:1900,  trend:-1, export:false },
+  Sugarcane: { soil:"Loamy",  season:"Kharif",     climate:"Hot & Wet",    minT:20, maxT:35, idealT:28, waterNeed:90, rain:2000, yield:70.0, days:365, npk:"N:250 P:80 K:150", demand:0.6, dScore:55, price:3500,  trend:0,  export:true },
+  Millet:    { soil:"Sandy",  season:"Kharif",     climate:"Semi-Arid",    minT:25, maxT:40, idealT:32, waterNeed:30, rain:30,   yield:2.0,  days:100, npk:"N:60 P:30 K:20",   demand:0.5, dScore:50, price:1800,  trend:1,  export:false },
+  Barley:    { soil:"Sandy",  season:"Rabi",        climate:"Cool & Dry",   minT:10, maxT:25, idealT:18, waterNeed:40, rain:40,   yield:2.5,  days:110, npk:"N:80 P:40 K:30",   demand:0.5, dScore:48, price:1600,  trend:0,  export:false },
+  Soybean:   { soil:"Loamy",  season:"Kharif",     climate:"Warm",          minT:20, maxT:30, idealT:25, waterNeed:55, rain:500,  yield:1.5,  days:100, npk:"N:30 P:60 K:40",   demand:0.6, dScore:60, price:4100,  trend:0,  export:true },
+  Cotton:    { soil:"Black",  season:"Kharif",     climate:"Warm & Dry",   minT:20, maxT:35, idealT:28, waterNeed:65, rain:700,  yield:1.8,  days:180, npk:"N:100 P:50 K:50",  demand:0.7, dScore:70, price:6200,  trend:1,  export:true },
+  Tomato:    { soil:"Red",    season:"All Season", climate:"Warm",          minT:18, maxT:30, idealT:24, waterNeed:60, rain:600,  yield:25.0, days:75,  npk:"N:120 P:60 K:60",  demand:0.88,dScore:88, price:2000,  trend:-1, export:false },
+  Onion:     { soil:"Sandy",  season:"Rabi",        climate:"Dry & Warm",   minT:13, maxT:28, idealT:20, waterNeed:40, rain:350,  yield:15.0, days:120, npk:"N:100 P:50 K:100", demand:0.95,dScore:95, price:2800,  trend:1,  export:true },
+};
+
+function showSection(id, el) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('sec-' + id).classList.add('active');
+  el.classList.add('active');
+}
+
+// ════════ RECOMMENDATION ENGINE ════════
+function calcScore(crop, soil, temp, water, fertility) {
+  const soilS  = crop.soil.toLowerCase() === soil.toLowerCase() ? 1.0 : 0.5;
+  const tempS  = Math.max(0, 1 - Math.abs(temp - crop.idealT) / 50);
+  const waterS = Math.max(0, 1 - Math.abs(water - crop.waterNeed) / 100);
+  const fertS  = Math.max(0, 1 - Math.abs(fertility - 0.6));
+  return Math.min(1, Math.max(0,
+    0.30 * soilS + 0.20 * tempS + 0.20 * waterS + 0.15 * crop.demand + 0.15 * fertS
+  ));
+}
+
+function runRecommendation() {
+  const soil  = document.getElementById('r-soil').value;
+  const temp  = +document.getElementById('r-temp').value;
+  const water = +document.getElementById('r-water').value;
+  const fert  = +document.getElementById('r-fert').value / 10;
+  const rain  = +document.getElementById('r-rain').value;
+  const irrig = +document.getElementById('r-irrigation').value;
+
+  const scored = Object.entries(crops).map(([name, c]) => ({
+    name, c, score: calcScore(c, soil, temp, water, fert)
+  })).sort((a,b) => b.score - a.score);
+
+  const cardsEl = document.getElementById('rec-cards');
+  cardsEl.innerHTML = '';
+  const rankClass = ['rank-1','rank-2','rank-3'];
+  scored.forEach((item, i) => {
+    const s = item.score;
+    const conf = s >= 0.75 ? ['Excellent','conf-high'] : s >= 0.55 ? ['Good','conf-med'] : ['Fair','conf-low'];
+    const pct = Math.round(s * 100);
+    cardsEl.innerHTML += `
+      <div class="result-card ${rankClass[i]||''}" style="animation-delay:${i*0.06}s">
+        <div class="result-rank">#${i+1} Rank</div>
+        <div class="result-name">${item.name}</div>
+        <div class="score-bar-wrap">
+          <div class="score-label"><span>Match Score</span><span>${s.toFixed(2)}</span></div>
+          <div class="score-bar-bg"><div class="score-bar" style="width:${pct}%"></div></div>
+        </div>
+        <div class="result-meta">Season: <span>${item.c.season}</span></div>
+        <div class="result-meta">Soil: <span>${item.c.soil}</span></div>
+        <div class="result-meta">Price: <span>₹${item.c.price}/qtl</span></div>
+        <div class="confidence-badge ${conf[1]}">${conf[0]}</div>
+      </div>`;
+  });
+
+  // Irrigation
+  const irrEl = document.getElementById('irrigation-alert');
+  if (irrig < 50)
+    irrEl.innerHTML = `<div class="alert alert-amber"><span class="alert-icon">💧</span><span class="alert-text"><b>Low water:</b> Use drip irrigation. Best crops: Millet, Barley.</span></div>`;
+  else if (irrig < 100)
+    irrEl.innerHTML = `<div class="alert alert-teal"><span class="alert-icon">💧</span><span class="alert-text"><b>Moderate water:</b> Irrigate 2–3 times per week. Suitable for Wheat, Maize.</span></div>`;
+  else
+    irrEl.innerHTML = `<div class="alert alert-green"><span class="alert-icon">💧</span><span class="alert-text"><b>High water:</b> Suitable for Rice, Sugarcane. Use flood irrigation.</span></div>`;
+
+  if (rain < 40 && water < 30)
+    irrEl.innerHTML += `<div class="alert alert-red" style="margin-top:10px"><span class="alert-icon">⚠️</span><span class="alert-text"><b>Drought Warning!</b> Consider rainwater harvesting & mulching techniques.</span></div>`;
+
+  // Score breakdown for top crop
+  const top = scored[0];
+  const soilS  = top.c.soil.toLowerCase() === soil.toLowerCase() ? 1.0 : 0.5;
+  const tempS  = Math.max(0, 1 - Math.abs(temp - top.c.idealT) / 50);
+  const waterS = Math.max(0, 1 - Math.abs(water - top.c.waterNeed) / 100);
+  const fertS  = Math.max(0, 1 - Math.abs(fert - 0.6));
+  const factors = [
+    { label: 'Soil Match',    val: soilS,        w: 0.30 },
+    { label: 'Temperature',   val: tempS,        w: 0.20 },
+    { label: 'Water',         val: waterS,       w: 0.20 },
+    { label: 'Market Demand', val: top.c.demand, w: 0.15 },
+    { label: 'Fertility',     val: fertS,        w: 0.15 },
+  ];
+  document.getElementById('breakdown-bars').innerHTML = factors.map(f => `
+    <div class="breakdown-bar-row">
+      <div class="breakdown-label">${f.label} <span style="color:var(--text3); font-size:10px">(×${f.w})</span></div>
+      <div class="breakdown-track"><div class="breakdown-fill" style="width:${Math.round(f.val*100)}%"></div></div>
+      <div class="breakdown-pct">${(f.val*100).toFixed(0)}%</div>
+    </div>`).join('');
+
+  document.getElementById('rec-results').style.display = 'block';
+}
+
+function resetRecommend() {
+  document.getElementById('rec-results').style.display = 'none';
+}
+
+// ════════ CROP INFO ════════
+function renderInfoTable(list) {
+  const tbody = document.getElementById('info-tbody');
+  if (!list.length) { tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:20px">No crops found.</td></tr>'; return; }
+  tbody.innerHTML = list.map(([name, c]) => `
+    <tr>
+      <td class="highlight">${name}</td>
+      <td>${c.season}</td>
+      <td>${c.soil}</td>
+      <td>${c.minT}–${c.maxT}°C</td>
+      <td>${c.rain} mm</td>
+      <td>${c.days} days</td>
+      <td>${c.yield} t/ha</td>
+      <td style="font-size:11px">${c.npk}</td>
+    </tr>`).join('');
+}
+
+function showAllCrops() {
+  document.getElementById('info-name').value = '';
+  document.getElementById('info-season').value = '';
+  document.getElementById('info-soil').value = '';
+  renderInfoTable(Object.entries(crops));
+}
+
+function runSearch() {
+  const name   = document.getElementById('info-name').value.trim().toLowerCase();
+  const season = document.getElementById('info-season').value;
+  const soil   = document.getElementById('info-soil').value.toLowerCase();
+
+  let list = Object.entries(crops);
+  if (name)   list = list.filter(([n]) => n.toLowerCase().includes(name));
+  if (season) list = list.filter(([,c]) => c.season.includes(season) || c.season === 'All Season');
+  if (soil)   list = list.filter(([,c]) => c.soil.toLowerCase().includes(soil));
+  renderInfoTable(list);
+}
+
+showAllCrops();
+
+// ════════ MARKET DEMAND — Bubble Sort ════════
+function bubbleSort(arr) {
+  const a = [...arr];
+  for (let i = 0; i < a.length-1; i++)
+    for (let j = 0; j < a.length-1-i; j++)
+      if (a[j][1].dScore < a[j+1][1].dScore) { let t=a[j]; a[j]=a[j+1]; a[j+1]=t; }
+  return a;
+}
+
+function trendTag(t) {
+  if (t===1)  return '<span class="tag tag-rising">▲ Rising</span>';
+  if (t===-1) return '<span class="tag tag-fall">▼ Falling</span>';
+  return '<span class="tag tag-stable">── Stable</span>';
+}
+function demandTag(s) {
+  if (s>=80) return '<span class="tag tag-high">HIGH</span>';
+  if (s>=60) return '<span class="tag tag-med">MEDIUM</span>';
+  return '<span class="tag tag-low">LOW</span>';
+}
+
+function showMarket(mode) {
+  const sorted = bubbleSort(Object.entries(crops));
+  const el = document.getElementById('market-results');
+  const max = Math.max(...sorted.map(([,c])=>c.dScore));
+
+  if (mode === 'all') {
+    el.innerHTML = `
+      <div class="section-title" style="font-size:16px;margin-bottom:16px">All Crops — Ranked by Demand (Bubble Sort)</div>
+      <div class="bar-chart">
+        ${sorted.map(([name,c],i) => `
+          <div class="bar-row" style="animation:fadeUp 0.3s ease ${i*0.05}s both">
+            <div class="bar-label">${name}</div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${(c.dScore/max*100).toFixed(0)}%; background:${c.dScore>=80?'#2e7d32':c.dScore>=60?'#e65100':'#37474f'}">
+                ${c.dScore}/100
+              </div>
+            </div>
+            <div class="bar-price">₹${c.price}</div>
+            ${trendTag(c.trend)}
+          </div>`).join('')}
+      </div>`;
+  } else if (mode === 'summary') {
+    const all = Object.values(crops);
+    const best  = sorted[0];
+    const worst = sorted[sorted.length-1];
+    const avg   = (all.reduce((s,c)=>s+c.dScore,0)/all.length).toFixed(1);
+    el.innerHTML = `
+      <div class="result-grid">
+        <div class="result-card rank-1">
+          <div class="result-rank">Highest Demand</div>
+          <div class="result-name">${best[0]}</div>
+          <div class="result-meta">Score: <span>${best[1].dScore}/100</span></div>
+          <div class="result-meta">Price: <span>₹${best[1].price}/qtl</span></div>
+        </div>
+        <div class="result-card">
+          <div class="result-rank">Lowest Demand</div>
+          <div class="result-name">${worst[0]}</div>
+          <div class="result-meta">Score: <span>${worst[1].dScore}/100</span></div>
+          <div class="result-meta">Price: <span>₹${worst[1].price}/qtl</span></div>
+        </div>
+        <div class="result-card">
+          <div class="result-rank">Average Score</div>
+          <div class="result-name">${avg}</div>
+          <div class="result-meta">out of <span>100</span></div>
+          <div class="result-meta">across <span>10 crops</span></div>
+        </div>
+      </div>`;
+  } else {
+    const exp = Object.entries(crops).filter(([,c])=>c.export);
+    el.innerHTML = `
+      <div class="section-title" style="font-size:16px;margin-bottom:14px">✈️ Export Potential Crops</div>
+      <table class="info-table">
+        <thead><tr><th>Crop</th><th>Market Price</th><th>Demand</th><th>Trend</th></tr></thead>
+        <tbody>${exp.map(([name,c])=>`
+          <tr>
+            <td class="highlight">${name}</td>
+            <td style="color:var(--amber)">₹${c.price}/quintal</td>
+            <td>${demandTag(c.dScore)}</td>
+            <td>${trendTag(c.trend)}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+  }
+}
+showMarket('all');
+
+// ════════ PEST RISK ════════
+function runPest() {
+  const crop = document.getElementById('pest-crop').value;
+  const temp = +document.getElementById('pest-temp').value;
+  const hum  = +document.getElementById('pest-hum').value;
+
+  let risk = 'Low', disease = 'None', action = 'No action needed at the moment.';
+
+  if (crop==='Rice'      && hum>75 && temp>=20 && temp<=30) { risk='HIGH';   disease='Blast Disease';          action='Apply Tricyclazole fungicide immediately.'; }
+  else if (crop==='Wheat'     && hum>60)                    { risk='MEDIUM'; disease='Rust Disease';            action='Spray Mancozeb preventively.'; }
+  else if (crop==='Sugarcane' && hum>70)                    { risk='MEDIUM'; disease='Red Rot';                 action='Remove infected stalks; apply Bordeaux mixture.'; }
+  else if (crop==='Cotton'    && temp>30 && hum>65)         { risk='HIGH';   disease='Boll Weevil / Whitefly'; action='Apply neem oil spray; use yellow sticky traps.'; }
+  else if (crop==='Tomato'    && hum>70)                    { risk='HIGH';   disease='Late Blight (Phytophthora)'; action='Apply Copper Oxychloride fungicide.'; }
+  else if (temp>35 && hum<40)                               { risk='MEDIUM'; disease='Insect Attack (general)'; action='Monitor; consider neem-based pesticide.'; }
+
+  const color = risk==='HIGH' ? 'alert-red' : risk==='MEDIUM' ? 'alert-amber' : 'alert-green';
+  document.getElementById('pest-results').innerHTML = `
+    <div class="pest-hero">
+      <div>
+        <div style="font-size:12px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px">Crop Analysed</div>
+        <div style="font-family:var(--font-head);font-size:28px;font-weight:700;margin-bottom:12px">${crop}</div>
+        <div style="font-size:13px;color:var(--text3)">Temp: ${temp}°C &nbsp;|&nbsp; Humidity: ${hum}%</div>
+        <div style="margin-top:14px">
+          <div style="font-size:13px;color:var(--text2);margin-bottom:4px">Possible Disease</div>
+          <div style="font-size:16px;font-weight:500;color:var(--amber)">${disease}</div>
+        </div>
+      </div>
+      <div class="risk-pill risk-${risk}">${risk}</div>
+    </div>
+    <div class="alert ${color}">
+      <span class="alert-icon">${risk==='High'?'✅':'💊'}</span>
+      <span class="alert-text"><b>Recommended Action:</b> ${action}</span>
+    </div>`;
+}
+
+// ════════ FERTILITY ════════
+function updateMeter(val) {
+  const circ = 2 * Math.PI * 56;
+  const offset = circ - (val * circ);
+  const circle = document.getElementById('meter-circle');
+  if (circle) {
+    circle.style.strokeDashoffset = offset;
+    circle.style.stroke = val < 0.3 ? '#ef5350' : val < 0.6 ? '#ffb74d' : '#4caf50';
+  }
+  const lbl = document.getElementById('meter-label');
+  if (lbl) lbl.textContent = val.toFixed(1);
+}
+
+function runFertility() {
+  const val = +document.getElementById('fert-val').value / 10;
+  document.getElementById('fertility-results').style.display = 'block';
+  updateMeter(val);
+
+  const lvlEl = document.getElementById('fert-level-text');
+  const advEl = document.getElementById('fert-advice-box');
+
+  if (val < 0.3) {
+    lvlEl.textContent = 'LOW';
+    lvlEl.style.color = 'var(--red)';
+    advEl.innerHTML = `
+      <div class="alert alert-red"><span class="alert-icon">⚠️</span>
+        <span class="alert-text"><b>Fertility is LOW (${val.toFixed(1)}).</b><br>
+        Add Nitrogen-rich fertilizer (Urea, Ammonium Nitrate).<br>
+        Also consider green manure or cow dung compost to rebuild soil.<br>
+        Avoid water-intensive crops this season.</span>
+      </div>`;
+  } else if (val < 0.6) {
+    lvlEl.textContent = 'MEDIUM';
+    lvlEl.style.color = 'var(--amber)';
+    advEl.innerHTML = `
+      <div class="alert alert-amber"><span class="alert-icon">💡</span>
+        <span class="alert-text"><b>Fertility is MEDIUM (${val.toFixed(1)}).</b><br>
+        Use balanced NPK fertilizer (10:26:26 or 14:35:14).<br>
+        Add compost to improve organic content.</span>
+      </div>`;
+  } else {
+    lvlEl.textContent = 'GOOD';
+    lvlEl.style.color = 'var(--green2)';
+    advEl.innerHTML = `
+      <div class="alert alert-green"><span class="alert-icon">✅</span>
+        <span class="alert-text"><b>Fertility is GOOD (${val.toFixed(1)}).</b><br>
+        Soil is healthy. Maintain with organic compost.<br>
+        Suitable for high-yield crops like Wheat, Rice, Tomato.</span>
+      </div>`;
+  }
+}
+
+// ════════ CROP COMPARE ════════
+function runCompare() {
+  const na = document.getElementById('cmp-a').value;
+  const nb = document.getElementById('cmp-b').value;
+  const a  = crops[na], b = crops[nb];
+
+  const rows = [
+    ['Season',       a.season,               b.season,               null],
+    ['Soil Type',    a.soil,                 b.soil,                 null],
+    ['Temp Range',   `${a.minT}–${a.maxT}°C`, `${b.minT}–${b.maxT}°C`, null],
+    ['Min Rainfall', `${a.rain} mm`,         `${b.rain} mm`,         null],
+    ['Growth Days',  `${a.days} days`,       `${b.days} days`,       'lower'],
+    ['Avg Yield',    `${a.yield} t/ha`,      `${b.yield} t/ha`,      'higher_yield'],
+    ['Market Price', `₹${a.price}`,          `₹${b.price}`,          'higher_price'],
+    ['Demand Score', `${a.dScore}/100`,      `${b.dScore}/100`,      'higher_d'],
+    ['Export',       a.export?'✅ Yes':'❌ No', b.export?'✅ Yes':'❌ No', null],
+    ['NPK Needs',    a.npk,                  b.npk,                  null],
+  ];
+
+  let aWins = 0, bWins = 0;
+  const rowsHtml = rows.map(([label, va, vb, cmp]) => {
+    let ca = '', cb = '';
+    if (cmp==='higher_yield') { if(a.yield>b.yield){ca='win-cell';aWins++;}else if(b.yield>a.yield){cb='win-cell';bWins++;} }
+    if (cmp==='higher_price') { if(a.price>b.price){ca='win-cell';aWins++;}else if(b.price>a.price){cb='win-cell';bWins++;} }
+    if (cmp==='higher_d')     { if(a.dScore>b.dScore){ca='win-cell';aWins++;}else if(b.dScore>a.dScore){cb='win-cell';bWins++;} }
+    if (cmp==='lower')        { if(a.days<b.days){ca='win-cell';aWins++;}else if(b.days<a.days){cb='win-cell';bWins++;} }
+    return `<tr><td>${label}</td><td class="${ca}">${va}</td><td class="${cb}">${vb}</td></tr>`;
+  }).join('');
+
+  const winner = aWins > bWins ? na : nb;
+  document.getElementById('compare-results').innerHTML = `
+    <div class="alert alert-green" style="margin-bottom:16px">
+      <span class="alert-icon">🏆</span>
+      <span class="alert-text"><b>${winner}</b> wins ${Math.max(aWins,bWins)} out of 4 compared metrics.</span>
+    </div>
+    <table class="compare-table">
+      <thead><tr>
+        <th>Property</th>
+        <th class="${aWins>=bWins?'winner':''}">${na} ${aWins>bWins?'🏆':''}</th>
+        <th class="${bWins>aWins?'winner':''}">${nb} ${bWins>aWins?'🏆':''}</th>
+      </tr></thead>
+      <tbody>${rowsHtml}</tbody>
+    </table>`;
+}
+</script>
+
+
+</body></html>
