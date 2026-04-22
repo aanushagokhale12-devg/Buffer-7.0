@@ -5,3 +5,5 @@ The themes for Buffer 7.0 are -
 2. GreenTech
 3. Cybersecurity and Digital Defense
 4. Open Innovation
+
+Team 171-Smart Farmimg System
